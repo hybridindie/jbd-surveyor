@@ -2,7 +2,7 @@ module Surveyor
   module SurveyorControllerMethods
     def self.included(base)
       base.send :before_filter, :get_current_user, :only => [:new, :create]
-      base.send :layout, 'surveyor_default'
+      #base.send :layout, 'surveyor_default'
     end
 
     # Actions
@@ -82,7 +82,7 @@ module Surveyor
           #             "survey_code"=>"kitchen-sink-survey", "response_set_code"=>"XMEn5rS03Y"}
           ids, remove, question_ids = {}, {}, []
           ResponseSet.reject_or_destroy_blanks(params[:r]).each do |k,v|
-           # debugger if @response_set.responses.find(:first, :conditions => v).nil?
+           #debugger if @response_set.responses.find(:first, :conditions => v).nil?
             ids[k] = @response_set.responses.find(:first, :conditions => v).id if !v.has_key?("id")
             remove[k] = v["id"] if v.has_key?("id") && v.has_key?("_destroy")
             question_ids << v["question_id"]
