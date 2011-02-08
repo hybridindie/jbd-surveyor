@@ -58,7 +58,7 @@ module Surveyor
     end
 
     def update
-      @response_set = ResponseSet.find_by_access_code(params[:response_set_code], :include => [{:responses => :answer}], :lock => true)
+      @response_set = ResponseSet.find_or_create_by_access_code(params[:response_set_code], :include => [{:responses => :answer}])
       return redirect_with_message(available_surveys_path, :notice, t('surveyor.unable_to_find_your_responses')) if @response_set.blank?
       saved = false
       # ActiveRecord::Base.transaction do
@@ -82,10 +82,12 @@ module Surveyor
           #             "survey_code"=>"kitchen-sink-survey", "response_set_code"=>"XMEn5rS03Y"}
           ids, remove, question_ids = {}, {}, []
           ResponseSet.reject_or_destroy_blanks(params[:r]).each do |k,v|
-           #debugger if @response_set.responses.find(:first, :conditions => v).nil?
+           
             ids[k] = @response_set.responses.find(:first, :conditions => v).id if !v.has_key?("id")
             remove[k] = v["id"] if v.has_key?("id") && v.has_key?("_destroy")
             question_ids << v["question_id"]
+            
+            #debugger if @response_set.responses.find(:first, :conditions => v).nil?
           end
           render :json => {"ids" => ids, "remove" => remove}.merge(@response_set.reload.all_dependencies(question_ids))
         end
