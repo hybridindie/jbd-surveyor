@@ -1,0 +1,11 @@
+<div id="surveyor">
+  <%= semantic_form_for(@response_set, :as => :response, :url => update_my_survey_path, :html => {:method => :put, :id => "survey_form", :class => @survey.custom_class}) do |f| %>
+    <%= render :partials => 'surveyor/section_menu' unless @sections.size < 3 %>
+    <div class="survey_title"><%= @survey.title %></div>
+    <div class="previous_section"><%= previous_section %></div>
+    <%= render 'surveyor/dependents' unless @dependents.empty? %>
+    <%= render "surveyor/section", :f => f %>
+    <div class="next_section"><%= next_section %></div>
+  <% end %>
+</div>
+<br />

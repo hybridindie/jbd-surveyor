@@ -159,7 +159,7 @@ describe SurveyorController do
          "4"=>{"question_id"=>"4", "answer_id"=>"15"}, #check
          "5"=>{"question_id"=>"5", "answer_id"=>"16", "string_value"=>""} #check+txt
       }
-      put :update, :survey_code => "XYZ", :response_set_code => "PDQ", :finish => "finish", :r => responses
+      put :update, :survey_code => "XYZ", :response_set_code => "PDQ", :finish => "finish", :response => responses
     end
     
     it "should find the response set requested" do
@@ -193,7 +193,7 @@ describe SurveyorController do
       ResponseSet.stub!(:find_by_access_code).and_return(@response_set)
     end
     def do_ajax_put(r)
-      xhr :put, :update, :survey_code => "XYZ", :response_set_code => "PDQ", :r => r
+      xhr :put, :update, :survey_code => "XYZ", :response_set_code => "PDQ", :response => r
     end
     it "should return an id for new responses" do
       do_ajax_put({

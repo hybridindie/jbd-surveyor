@@ -1,0 +1,45 @@
+<% renderer = group.renderer %>
+<%= f.inputs q_text(group), :id => "g_#{group.id}", :class => "g_#{renderer} #{group.css_class(@response_set)}" do %>
+    <li class="help"><%= group.help_text %></li>
+    <% case renderer %>
+    <% when :grid %>
+      <li>
+        <table>
+          <tbody>
+            <% question_section.each_slice(10) do |ten_questions| %>
+              <tr>
+                <th> </th>
+                <% ten_questions.first.answers.each do |answer| %>
+                  <th><%= answer.text %></th>
+                <% end %>
+                <th> </th>
+              </tr>
+              <% ten_questions.each_with_index do |question, index| %>
+                <tr id="q_<%= question.id %>" class="q_<%= renderer %>">
+                  <th><%= question.split_text(:pre) %></th>
+                  <% response_idx if question.pick == "one" %>
+                  <% question.answers.each do |answer| %>
+                    <td><%= render answer.custom_renderer || 'surveyor/answer', :group => group, :question => question, :answer => answer, :f => f %></td>
+                  <% end %>
+                  <th><%=  question.split_text(:post) %></th>
+                </tr>
+              <% end %>
+            <% end %>
+          </tbody>
+        </table>
+      </li>
+    <% when :repeater %>
+      <%= (@response_set.count_group_responses(question_section) + 1).times do |rg| %>
+        <li>
+          <% question_section.each do |question| %>
+            <%= render question.custom_renderer || "surveyor/question", :group => group, :rg => rg, :question => question, :f => f %>
+            <%= submit_tag("+ add row", :name => "section[#{@section.id}][g_#{group.id}]", :class => "add_row") %>
+          <% end %>
+        </li>
+      <% end %>
+    <% else %>
+      <% question_section.each do |question| %>
+        <%= render question.custom_renderer || "surveyor/question", :group => group, :question => question, :f => f %>
+      <% end %>
+    <% end %>
+<% end %>

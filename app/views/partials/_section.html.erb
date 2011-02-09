@@ -1,0 +1,17 @@
+<%= div_for @section, :class => @section.custom_class do %>
+  <span class="title">
+    <%= @section.title %>
+  </span>
+  <% question_section ||= [] %>
+  <% (questions = @section.questions).each_with_index do |question, index| %>
+    <% if question.part_of_group? %>
+      <% question_section << question %>
+      <% if (index+1 >= questions.size) or (question.question_group_id != questions[index+1].question_group_id) %>
+        <%= render question.question_group.custom_renderer || "surveyor/question_group", :g => question.question_group, :question_section => question_section, :f => f %>
+        <% question_section = [] %>
+      <% end %>
+    <% else %>
+      <%= render question.custom_renderer || "surveyor/question", :question => question, :f => f %>
+    <% end %>
+  <% end %>
+<% end %>

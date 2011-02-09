@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    surveyor (0.19.0)
+    surveyor (0.19.1)
       formtastic (>= 1.2.3)
       haml
       rails (= 3.0.3)

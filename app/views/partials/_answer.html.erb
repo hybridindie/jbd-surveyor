@@ -1,0 +1,30 @@
+<% response_group ||= nil %>
+<% response = response_for(@response_set, question, answer, response_group) %>
+<% response_index = response_idx(question.pick != "one") %>
+<%= f.semantic_fields_for response_index, response do |ff| %>
+  <%= ff.quiet_input :question_id %>
+  <%= ff.quiet_input :id unless question.pick == "one" or response.new_record? %>
+  <%= ff.quiet_input :response_group, :value => response_group if question.pick != "one" && group && group.display_type == "repeater" %>
+
+  <% case question.pick %>
+  <% when "one" %>
+    <%= ff.input :answer_id, :as => :surveyor_radio, :collection => [[answer.text, answer.id]], :label => true, :input_html => {:class => answer.css_class}, :response_class => answer.response_class %>
+  <% when "any" %>
+    <%= ff.input :answer_id, :as => :surveyor_check_boxes, :collection => [[answer.text, answer.id]], :label => true, :input_html => {:class => answer.css_class}, :response_class => answer.response_class %>
+  <% when "none" %>
+
+    <% if %w(date datetime time float integer string text).include? answer.response_class %>
+      <%= ff.quiet_input :answer_id, :input_html => {:class => answer.css_class, :value => answer.id} %>
+
+      <% if response.value %>
+        <%= ff.input rc_to_attr(answer.response_class), :as => rc_to_as(answer.response_class), :label => answer.split_or_hidden_text(:pre).blank? ? false : answer.split_or_hidden_text(:pre), :hint => answer.split_or_hidden_text(:post) %>
+      <% else %>
+        <%= ff.input rc_to_attr(answer.response_class), :as => rc_to_as(answer.response_class), :label => answer.split_or_hidden_text(:pre).blank? ? false : answer.split_or_hidden_text(:pre), :hint => answer.split_or_hidden_text(:post), :input_html => {:value => answer.default_value} %>
+      <% end %>
+      
+    <% else %>
+      <%= answer.text %>
+    <% end %>
+
+  <% end %>
+<% end %>

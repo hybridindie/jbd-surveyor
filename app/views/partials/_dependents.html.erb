@@ -1,0 +1,5 @@
+<div id="dependents">
+  <div class="title">Follow-up questions from your answers on the previous page</div>
+  <%= dependency_explanation_helper(question, @response_set) %>
+  <%= render question.custom_renderer || "surveyor/question", :question => question, :response_set => @response_set, :number => "D#{index+1}" %>
+</div>

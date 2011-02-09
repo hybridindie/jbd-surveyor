@@ -1,0 +1,29 @@
+<% response_group ||= nil %>
+<% renderer = question.renderer(group ||= nil) %>
+<%= f.inputs q_text(question), :id => response_group ? "q_#{question.id}_#{response_group.id}" : "q_#{question.id}", :class => "q_#{renderer} #{question.css_class(@response_set)}" do %>
+    <span class="help"><%= question.help_text %></span>
+    <% case renderer %>
+    <% when :image, :label %>
+    <% when :slider, :dropdown, :inline_dropdown %>
+      <% r = response_for(@response_set, question, nil, response_group) %>
+      <% i = response_idx %>
+      <% f.semantic_fields_for i, r do |ff| %>
+        <%= ff.quiet_input :question_id %>
+        <%= ff.quiet_input :response_group, :value => response_group if group && group.display_type == "repeater" %>
+        <%= ff.input :answer_id, :as => :select, :collection => question.answers.map { |answer| [answer.text, answer.id] }, :label => false %>
+      <% end %>
+    <% else %>
+      <% if question.pick == "one" %>
+        <% r = response_for(@response_set, question, nil, response_group) %>
+        <% i = response_idx %>
+        <% f.semantic_fields_for i, r do |ff| %>
+          <%= ff.quiet_input :question_id %>
+          <%= ff.quiet_input :response_group, :value => response_group if group && group.display_type == "repeater" %>
+          <%= ff.quiet_input :id unless r.new_record? %>
+        <% end %>
+      <% end %>
+      <% question.answers.each do |answer| %>
+        <%= render answer.custom_renderer || 'surveyor/answer', :question => question, :answer => answer, :f => f, :response_group => response_group, :group => group %>
+      <% end %>
+    <% end %>
+<% end %>
