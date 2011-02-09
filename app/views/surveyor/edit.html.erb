@@ -3,6 +3,11 @@
     <%= render :partials => 'surveyor/section_menu' unless @sections.size < 3 %>
     <div class="survey_title"><%= @survey.title %></div>
     <div class="previous_section"><%= previous_section %></div>
+
+    <%= f.input :affiliate_id, :as => :select, :collection => @affiliate_data[:affiliate_list].map { |a| [a.name, a.id] }, :label => true %>
+    <%= f.input :agent_id, :as => :select, :collection => @affiliate_data[:agent_list].map { |al| ["#{al.last_name}, #{al.first_name}", al.id] }, :label => true %>
+    <%= f.input :client_id, :label => true %>
+
     <%= render 'surveyor/dependents' unless @dependents.empty? %>
     <%= render "surveyor/section", :f => f %>
     <div class="next_section"><%= next_section %></div>

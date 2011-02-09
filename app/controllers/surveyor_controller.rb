@@ -40,6 +40,9 @@ class SurveyorController < ApplicationController
   end
 
   def edit
+    @affiliate_data = {}
+    @affiliate_data[:affiliate_list] = Affiliate.all
+    @affiliate_data[:agent_list] = User.where("users.id != ?", @current_user)
     @response_set = ResponseSet.find_by_access_code(params[:response_set_code], :include => {:responses => [:question, :answer]})
     if @response_set
       @survey = Survey.with_sections.find_by_id(@response_set.survey_id)
@@ -97,7 +100,7 @@ class SurveyorController < ApplicationController
 
   # Filters
   def get_current_user
-    @current_user = self.respond_to?(:current_user) ? self.current_user : nil
+    @current_user# = self.respond_to?(:current_user) ? self.current_user : nil
   end
 
   # Params: the name of some submit buttons store the section we'd like to go to. for repeater questions, an anchor to the repeater group is also stored
