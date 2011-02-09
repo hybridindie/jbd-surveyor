@@ -2,7 +2,7 @@ require 'surveyor'
 # Surveyor Controller allows a user to take a survey. It is semi-RESTful since it does not have a concrete representation model.
 # The "resource" is a survey attempt/session populating a response set.
 class SurveyorController < ApplicationController
-  before_filter, :get_current_user, :only => [:new, :create]
+  before_filter :get_current_user, :only => [:new, :create]
 
   # Actions
   def new
@@ -84,7 +84,7 @@ class SurveyorController < ApplicationController
 
           ids[key] = @response_set.responses.find(:first, :conditions => value).id if !value.has_key?("id")
           remove[key] = value["id"] if value.has_key?("id") && value.has_key?("_destroy")
-          question_ids << v["question_id"]
+          question_ids << value["question_id"]
 
           #debugger if @response_set.responses.find(:first, :conditions => v).nil?
         end
