@@ -26,7 +26,7 @@ module Surveyor
             result = {}
             (hash_of_hashes || {}).each_pair do |k, hash|
               if has_blank_value?(hash)
-                result.merge!({k => hash.merge("_destroy" => "true")}) if hash.has_key?("id")
+                result.merge!({k => hash.merge("_destroy" => "true")}) if !hash.is_a?(String) and hash.has_key?("id")
               else
                 result.merge!({k => hash})
               end

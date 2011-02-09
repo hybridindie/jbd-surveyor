@@ -64,6 +64,7 @@ class SurveyorController < ApplicationController
     return redirect_with_message(available_surveys_path, :notice, t('surveyor.unable_to_find_your_responses')) if @response_set.blank?
     saved = false
     # ActiveRecord::Base.transaction do
+    @response_set.update_attributes(params[:response_set])
     saved = @response_set.update_attributes(:responses_attributes => ResponseSet.reject_or_destroy_blanks(params[:response]))
     saved = @response_set.complete! if saved && params[:finish]
     # end
