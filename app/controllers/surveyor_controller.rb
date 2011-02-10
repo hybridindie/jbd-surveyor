@@ -3,6 +3,7 @@ require 'surveyor'
 # The "resource" is a survey attempt/session populating a response set.
 class SurveyorController < ApplicationController
   before_filter :get_current_user, :only => [:new, :create]
+  
 
   # Actions
   def new

@@ -36,7 +36,7 @@
   </fieldset>
 <% end %>
 
-<%= will_paginate @questions %>
+
 
 <table class="admin_table">
   <tr class="header_row">
@@ -46,8 +46,8 @@
     <%= sortable_th "Admin?", :admin %>
     <th colspan='2'>&nbsp;</th>
   </tr>
-  <% @users.each_with_index do |user, i| %>
-    <tr id="<%= dom_id user %>" class='<%= i.odd? ? "odd_row" : "even_row" %>'>
+  <% @response_sets.each_with_index do |rs, i| %>
+    <tr id="<%= dom_id rs %>" class='<%= i.odd? ? "odd_row" : "even_row" %>'>
       <td><%= user.first_name %></td>
       <td><%= user.last_name %></td>
       <td><%= user.email %></td>
@@ -58,6 +58,5 @@
   <% end %>
 </table>
 
-<%= will_paginate @questions %>
 
 <%= link_to "Back", results_path %>

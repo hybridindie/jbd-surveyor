@@ -1,7 +1,7 @@
 require 'iconv'
 class ResultsController < ApplicationController
   helper 'surveyor'
-  #layout 'results' 
+  layout 'admin' 
   def index
     @surveys = Survey.all
   end
