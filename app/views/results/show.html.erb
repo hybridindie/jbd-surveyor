@@ -22,4 +22,42 @@
 
 <br />
 
+<h1>Users</h1>
+
+<%= form_tag result_path, :method => :get do %>
+  <fieldset class="filters">
+    <legend>Filter</legend>
+    <label for="q">Name/email contains</label>
+    <%= text_field_tag :q, params[:q] %>
+    &nbsp;
+    <label for="audit_id">Affiliate audit ID</label>
+    <%= text_field_tag :audit_id, params[:audit_id], :size => 12 %>
+    <input type="submit" value="Search"/>
+  </fieldset>
+<% end %>
+
+<%= will_paginate @questions %>
+
+<table class="admin_table">
+  <tr class="header_row">
+    <%= sortable_th "First Name", :first_name %>
+    <%= sortable_th "Last Name", :last_name %>
+    <%= sortable_th "Email", :email %>
+    <%= sortable_th "Admin?", :admin %>
+    <th colspan='2'>&nbsp;</th>
+  </tr>
+  <% @users.each_with_index do |user, i| %>
+    <tr id="<%= dom_id user %>" class='<%= i.odd? ? "odd_row" : "even_row" %>'>
+      <td><%= user.first_name %></td>
+      <td><%= user.last_name %></td>
+      <td><%= user.email %></td>
+      <td><%= user.admin? ? "Yes" : "No" %></td>
+      <td><%= link_to 'Edit', edit_admin_user_path(user) %></td>
+      <td><%= link_to "Delete", admin_user_path(user), :confirm => "Are you sure?", :method => :delete, :remote => true %></td>
+    </tr>
+  <% end %>
+</table>
+
+<%= will_paginate @questions %>
+
 <%= link_to "Back", results_path %>
